@@ -1,1 +1,343 @@
-blip
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zeesan Loves Tasneem Calculator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #ffe0f0 0%, #ffc2e0 50%, #ffaad5 100%);
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+
+  .calc-wrapper {
+    background: linear-gradient(160deg, #ff80bf 0%, #ff4da6 60%, #e6006b 100%);
+    border-radius: 28px;
+    padding: 28px 22px 24px;
+    box-shadow: 0 12px 48px rgba(180, 0, 100, 0.45), 0 2px 8px rgba(255,100,180,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+    width: 360px;
+    max-width: 98vw;
+  }
+
+  .calc-title {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff0f8;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    text-shadow: 0 1px 4px rgba(150,0,80,0.5);
+  }
+
+  .display-area {
+    background: linear-gradient(180deg, #3d0024 0%, #1a000f 100%);
+    border-radius: 14px;
+    padding: 14px 18px 12px;
+    margin-bottom: 18px;
+    border: 2px solid #ff66b3;
+    box-shadow: inset 0 3px 12px rgba(0,0,0,0.6);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  .expression-line {
+    font-size: 13px;
+    color: #ff80c0;
+    min-height: 18px;
+    word-break: break-all;
+    text-align: right;
+    margin-bottom: 6px;
+    font-family: 'Courier New', monospace;
+    opacity: 0.8;
+  }
+
+  .result-line {
+    font-size: 30px;
+    font-weight: 700;
+    color: #ff99d6;
+    text-align: right;
+    word-break: break-all;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 12px rgba(255,100,200,0.7);
+    line-height: 1.1;
+  }
+
+  .love-banner {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #ff66b3;
+    text-align: center;
+    letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255,50,180,0.8);
+    font-family: Georgia, serif;
+    font-style: italic;
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  button {
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0;
+    height: 48px;
+    cursor: pointer;
+    transition: transform 0.08s, box-shadow 0.08s, filter 0.08s;
+    outline: none;
+    letter-spacing: 0.3px;
+  }
+
+  button:active {
+    transform: scale(0.93);
+    filter: brightness(0.9);
+  }
+
+  .btn-num {
+    background: linear-gradient(160deg, #ff99cc, #ff66b3);
+    color: #fff;
+    box-shadow: 0 3px 8px rgba(180,0,100,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  .btn-op {
+    background: linear-gradient(160deg, #ff4da6, #cc0066);
+    color: #fff;
+    box-shadow: 0 3px 8px rgba(150,0,80,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+
+  .btn-sci {
+    background: linear-gradient(160deg, #e60073, #99004d);
+    color: #ffd6ec;
+    font-size: 11px;
+    box-shadow: 0 3px 8px rgba(100,0,60,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  .btn-eq {
+    background: linear-gradient(160deg, #ff0080, #cc0055);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(200,0,80,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
+    font-size: 20px;
+    grid-column: span 2;
+  }
+
+  .btn-zero {
+    grid-column: span 2;
+  }
+
+  .btn-clr {
+    background: linear-gradient(160deg, #ff3399, #aa0044);
+    color: #fff;
+    box-shadow: 0 3px 8px rgba(180,0,80,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+
+  .hearts {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 18px;
+    color: #fff0f8;
+    letter-spacing: 4px;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.75; transform: scale(1.08); }
+  }
+</style>
+</head>
+<body>
+
+<div class="calc-wrapper">
+  <div class="calc-title">&#10084; Scientific Calculator &#10084;</div>
+
+  <div class="display-area">
+    <div class="expression-line" id="expression"></div>
+    <div class="result-line" id="display">0</div>
+    <div class="love-banner" id="loveBanner" style="display:none;">&#10084; Zeesan loves Tasneem &#10084;</div>
+  </div>
+
+  <div class="buttons">
+    <!-- Row 1: Scientific -->
+    <button class="btn-sci" onclick="inputSci('sin(')">sin</button>
+    <button class="btn-sci" onclick="inputSci('cos(')">cos</button>
+    <button class="btn-sci" onclick="inputSci('tan(')">tan</button>
+    <button class="btn-sci" onclick="inputSci('log(')">log</button>
+    <button class="btn-sci" onclick="inputSci('ln(')">ln</button>
+
+    <!-- Row 2: Scientific -->
+    <button class="btn-sci" onclick="inputSci('sqrt(')">√</button>
+    <button class="btn-sci" onclick="inputSci('cbrt(')">∛</button>
+    <button class="btn-sci" onclick="inputOp('^')">x^y</button>
+    <button class="btn-sci" onclick="inputSci('abs(')">|x|</button>
+    <button class="btn-sci" onclick="inputSci('pi')">π</button>
+
+    <!-- Row 3: Scientific -->
+    <button class="btn-sci" onclick="inputSci('e')">e</button>
+    <button class="btn-sci" onclick="inputOp('!')">n!</button>
+    <button class="btn-sci" onclick="inputOp('(')"> ( </button>
+    <button class="btn-sci" onclick="inputOp(')')"> ) </button>
+    <button class="btn-clr" onclick="backspace()">⌫</button>
+
+    <!-- Row 4 -->
+    <button class="btn-clr" onclick="clearAll()" style="grid-column: span 2;">AC</button>
+    <button class="btn-op" onclick="inputOp('%')">%</button>
+    <button class="btn-op" onclick="inputOp('/')">÷</button>
+    <button class="btn-sci" onclick="inputSci('1/(')">1/x</button>
+
+    <!-- Row 5 -->
+    <button class="btn-num" onclick="inputNum('7')">7</button>
+    <button class="btn-num" onclick="inputNum('8')">8</button>
+    <button class="btn-num" onclick="inputNum('9')">9</button>
+    <button class="btn-op" onclick="inputOp('*')">×</button>
+    <button class="btn-sci" onclick="inputSci('x2(')">x²</button>
+
+    <!-- Row 6 -->
+    <button class="btn-num" onclick="inputNum('4')">4</button>
+    <button class="btn-num" onclick="inputNum('5')">5</button>
+    <button class="btn-num" onclick="inputNum('6')">6</button>
+    <button class="btn-op" onclick="inputOp('-')">−</button>
+    <button class="btn-sci" onclick="inputSci('x3(')">x³</button>
+
+    <!-- Row 7 -->
+    <button class="btn-num" onclick="inputNum('1')">1</button>
+    <button class="btn-num" onclick="inputNum('2')">2</button>
+    <button class="btn-num" onclick="inputNum('3')">3</button>
+    <button class="btn-op" onclick="inputOp('+')">+</button>
+    <button class="btn-eq" onclick="calculate()">=</button>
+
+    <!-- Row 8 -->
+    <button class="btn-num btn-zero" onclick="inputNum('0')">0</button>
+    <button class="btn-num" onclick="inputDot()">.</button>
+    <button class="btn-op" onclick="toggleSign()">+/−</button>
+  </div>
+
+  <div class="hearts">♥ ♥ ♥</div>
+</div>
+
+<script>
+  let expression = '';
+  let justCalculated = false;
+
+  function updateDisplay(text) {
+    document.getElementById('display').textContent = text;
+  }
+
+  function updateExpression(text) {
+    document.getElementById('expression').textContent = text;
+  }
+
+  function showLoveBanner() {
+    document.getElementById('loveBanner').style.display = 'block';
+  }
+
+  function hideLoveBanner() {
+    document.getElementById('loveBanner').style.display = 'none';
+  }
+
+  function inputNum(n) {
+    hideLoveBanner();
+    if (justCalculated) { expression = ''; justCalculated = false; }
+    expression += n;
+    updateExpression(expression);
+    updateDisplay(expression);
+  }
+
+  function inputDot() {
+    hideLoveBanner();
+    if (justCalculated) { expression = '0'; justCalculated = false; }
+    const parts = expression.split(/[\+\-\*\/]/);
+    const last = parts[parts.length - 1];
+    if (last.includes('.')) return;
+    if (!last || isNaN(last.slice(-1))) expression += '0';
+    expression += '.';
+    updateExpression(expression);
+    updateDisplay(expression);
+  }
+
+  function inputOp(op) {
+    hideLoveBanner();
+    justCalculated = false;
+    if (op === '!' ) {
+      expression += '!';
+    } else {
+      expression += op;
+    }
+    updateExpression(expression);
+    updateDisplay(expression);
+  }
+
+  function inputSci(fn) {
+    hideLoveBanner();
+    if (justCalculated) { expression = ''; justCalculated = false; }
+    expression += fn;
+    updateExpression(expression);
+    updateDisplay(expression);
+  }
+
+  function toggleSign() {
+    hideLoveBanner();
+    if (!expression) return;
+    if (expression.startsWith('-')) {
+      expression = expression.slice(1);
+    } else {
+      expression = '-' + expression;
+    }
+    updateExpression(expression);
+    updateDisplay(expression);
+  }
+
+  function backspace() {
+    hideLoveBanner();
+    expression = expression.slice(0, -1);
+    updateExpression(expression);
+    updateDisplay(expression || '0');
+  }
+
+  function clearAll() {
+    hideLoveBanner();
+    expression = '';
+    justCalculated = false;
+    updateExpression('');
+    updateDisplay('0');
+  }
+
+  function factorial(n) {
+    n = Math.floor(n);
+    if (n < 0) return NaN;
+    if (n === 0 || n === 1) return 1;
+    let result = 1;
+    for (let i = 2; i <= n; i++) result *= i;
+    return result;
+  }
+
+  function calculate() {
+    if (!expression) return;
+    updateExpression(expression + ' =');
+
+    // Always show the love message
+    showLoveBanner();
+    updateDisplay('Zeesan ♥ Tasneem');
+    justCalculated = true;
+    expression = '';
+  }
+</script>
+
+</body>
+</html>
